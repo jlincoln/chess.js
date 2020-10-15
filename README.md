@@ -78,7 +78,7 @@ chess.ascii()
 // -> '   +------------------------+
 //      8 | r  n  b  q  k  b  n  r |
 //      7 | p  p  p  p  .  p  p  p |
-//      6 | .  .  .  .  .  .  .  . |
+//      6 | .  .  .  .  e  .  .  . |
 //      5 | .  .  .  .  p  .  .  . |
 //      4 | .  .  .  .  P  P  .  . |
 //      3 | .  .  .  .  .  .  .  . |
@@ -106,7 +106,7 @@ chess.board()
         {type: 'n', color: 'b'},
         {type: 'r', color: 'b'}],
         [...],
-        [...],
+        [...{type: 'e', color: 'b'},...],
         [...],
         [...],
         [...],
@@ -186,7 +186,7 @@ chess.move('e5')
 chess.move('f4')
 
 chess.fen()
-// -> 'rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq f3 0 2'
+// -> 'rnbqkbnr/pppp1ppp/4e3/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq f3 0 2'
 ```
 
 ### .game_over()
@@ -199,7 +199,7 @@ chess.game_over()
 // -> false
 
 // stalemate
-chess.load('4k3/4P3/4K3/8/8/8/8/8 b - - 0 78')
+chess.load('4k3/4P3/4K3/8/4e3/8/8/8 b - - 0 78')
 chess.game_over()
 // -> true
 
@@ -308,7 +308,7 @@ Returns true or false if the side to move is in check.
 
 ```js
 const chess = new Chess(
-    'rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3'
+    'rnb1kbnr/pppp1ppp/8/4p3/5PPq/4E3/PPPPP2P/RNBQKBNR w KQkq - 1 3'
 )
 chess.in_check()
 // -> true
@@ -442,14 +442,14 @@ chess.load_pgn(pgn.join('\n'))
 // -> true
 
 chess.fen()
-// -> 1r3kr1/pbpBBp1p/1b3P2/8/8/2P2q2/P4PPP/3R2K1 b - - 0 24
+// -> 1r3kr1/pbpBBp1p/1b3P2/4e3/8/2P2q2/P4PPP/3R2K1 b - - 0 24
 
 chess.ascii()
 // -> '  +------------------------+
 //     8 | .  r  .  .  .  k  r  . |
 //     7 | p  b  p  B  B  p  .  p |
 //     6 | .  b  .  .  .  P  .  . |
-//     5 | .  .  .  .  .  .  .  . |
+//     5 | .  .  .  e  .  .  .  . |
 //     4 | .  .  .  .  .  .  .  . |
 //     3 | .  .  P  .  .  q  .  . |
 //     2 | P  .  .  .  .  P  P  P |
@@ -730,13 +730,6 @@ chess.validate_fen('4r3/8/X12XPk/1p6/pP2p1R1/P1B5/2P2K2/3r4 w - - 1 45')
 // -> { valid: false, error_number: 9,
 //     error: '1st field (piece positions) is invalid [invalid piece].' }
 ```
-
-## MUSIC
-
-Musical support provided by:
-
--   [The Grateful Dead](https://www.youtube.com/watch?v=z-D9rdJWfWs)
--   [Umphrey's McGee](https://www.youtube.com/watch?v=auEfZVcYp64)
 
 ## BUGS
 
