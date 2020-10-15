@@ -14,3 +14,5 @@ to chess.js (alphabetically):
 -   [Seb Vincent](https://github.com/sebv)
 -   [Linmiao Xu](https://github.com/linrock)
 -   [Jonathan Zacsh](https://github.com/jzacsh)
+
+And of course @jhlywa(https://github.com/jhlywa).
