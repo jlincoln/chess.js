@@ -25,7 +25,13 @@
  *
  *----------------------------------------------------------------------------*/
 
+/*
+ *  Purpose: The echess.js fork of chess.js is to add logic for the Elephant
+ *  chess piece.
+ */
+
 var Chess = function(fen) {
+
   var BLACK = 'b'
   var WHITE = 'w'
 
@@ -38,7 +44,9 @@ var Chess = function(fen) {
   var QUEEN = 'q'
   var KING = 'k'
 
-  var SYMBOLS = 'pnbrqkPNBRQK'
+  var ELEPHANT = 'e'
+
+  var SYMBOLS = 'pnbrqkePNBRQKE'
 
   var DEFAULT_POSITION =
     'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
@@ -105,7 +113,8 @@ var Chess = function(fen) {
     EP_CAPTURE: 'e',
     PROMOTION: 'p',
     KSIDE_CASTLE: 'k',
-    QSIDE_CASTLE: 'q'
+    QSIDE_CASTLE: 'q',
+    ELEPHANT_DOMINATE_COLOR: ''
   }
 
   var BITS = {
@@ -318,9 +327,6 @@ var Chess = function(fen) {
 
     /* 7th criterion: 1st field contains 8 rows? */
     var rows = tokens[0].split('/')
-    if (rows.length !== 8) {
-      return { valid: false, error_number: 7, error: errors[7] }
-    }
 
     /* 8th criterion: every row is valid? */
     for (var i = 0; i < rows.length; i++) {
@@ -336,7 +342,7 @@ var Chess = function(fen) {
           sum_fields += parseInt(rows[i][k], 10)
           previous_was_number = true
         } else {
-          if (!/^[prnbqkPRNBQK]$/.test(rows[i][k])) {
+          if (!/^[prnbqkePRNBQKE]$/.test(rows[i][k])) {
             return { valid: false, error_number: 9, error: errors[9] }
           }
           sum_fields += 1
@@ -525,8 +531,13 @@ var Chess = function(fen) {
         for (var i = 0, len = pieces.length; i < len; i++) {
           moves.push(build_move(board, from, to, flags, pieces[i]))
         }
-      } else {
+      } else if (board[from].type === ELEPHANT) {
+        console.log(`add_move {from: ${from}, to: ${to}}`);
         moves.push(build_move(board, from, to, flags))
+      } else {
+        if (board !== undefined && board[from] !== undefined && board[from].type !== undefined) {
+          moves.push(build_move(board, from, to, flags))
+        }
       }
     }
 
@@ -564,7 +575,7 @@ var Chess = function(fen) {
       }
 
       var piece = board[i]
-      if (piece == null || piece.color !== us) {
+      if (piece == null || (piece.color !== us && piece.type !== 'e')) {
         continue
       }
 
@@ -592,6 +603,19 @@ var Chess = function(fen) {
             add_move(board, moves, i, ep_square, BITS.EP_CAPTURE)
           }
         }
+      } else if (piece.type === ELEPHANT) {
+        // move to any none occupied square
+        console.log('finding moves for elephant at '+ i);
+        for (let j = first_sq; j <= last_sq; j++) {
+          console.log('j is ' + j);
+          console.log('board[j] is ' + JSON.stringify(board[j]));
+          if (board[j] === undefined || board[j] == null) {
+            square = j; // TODO: calculate offsets for piece & use to calc square
+            console.log(`adding move {from: ${i}, to: ${square}}`);
+            add_move(board, moves, i, square, BITS.NORMAL)
+          }
+        }
+        console.log(`moves are ${JSON.stringify(moves)}`);
       } else {
         for (var j = 0, len = PIECE_OFFSETS[piece.type].length; j < len; j++) {
           var offset = PIECE_OFFSETS[piece.type][j]
@@ -670,7 +694,6 @@ var Chess = function(fen) {
       }
       undo_move()
     }
-
     return legal_moves
   }
 
@@ -1127,7 +1150,7 @@ var Chess = function(fen) {
     // this should parse invalid SAN like: Pe2-e4, Rc1c4, Qf3xf7
     if (sloppy) {
       var matches = clean_move.match(
-        /([pnbrqkPNBRQK])?([a-h][1-8])x?-?([a-h][1-8])([qrbnQRBN])?/
+        /([pnbrqkPNBRQKE])?([a-h][1-8])x?-?([a-h][1-8])([qrbnQRBNE])?/
       )
       if (matches) {
         var piece = matches[1]
@@ -1174,8 +1197,8 @@ var Chess = function(fen) {
   }
 
   function algebraic(i) {
-    var f = file(i),
-      r = rank(i)
+    var f = file(i), r = rank(i)
+
     return 'abcdefgh'.substring(f, f + 1) + '87654321'.substring(r, r + 1)
   }
 
@@ -1260,6 +1283,7 @@ var Chess = function(fen) {
     ROOK: ROOK,
     QUEEN: QUEEN,
     KING: KING,
+    ELEPHANT: ELEPHANT,
     SQUARES: (function() {
       /* from the ECMA-262 spec (section 12.6.4):
        * "The mechanics of enumerating the properties ... is
