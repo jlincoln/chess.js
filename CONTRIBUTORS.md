@@ -1,5 +1,5 @@
 Special thanks to the following developers for their patches and contributions
-(alphabetically):
+to chess.js (alphabetically):
 
 -   [Steve Bragg](https://github.com/2sb18)
 -   [Ngoc Dao](https://github.com/ngocdaothanh)
