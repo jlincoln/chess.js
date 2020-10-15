@@ -1,12 +1,13 @@
-# chess.js
+# echess.js
 
-[![Build Status](https://travis-ci.org/jhlywa/chess.js.svg?branch=master)](https://travis-ci.org/jhlywa/chess.js)
-
-chess.js is a Javascript chess library that is used for chess move
-generation/validation, piece placement/movement, and check/checkmate/stalemate
-detection - basically everything but the AI.
+echess.js is a fork of chess.js. chess.js is a Javascript chess library that is
+used for chess move generation/validation, piece placement/movement, and
+check/checkmate/stalemate detection - basically everything but the AI.
 
 chess.js has been extensively tested in node.js and most modern browsers.
+
+echess.js adds logic for the Elephant chess piece.  See http://elephantchess.net
+for additional game directions.
 
 ## Installation
 
@@ -14,10 +15,10 @@ To install the stable version:
 
 ```
 # NPM
-npm install chess.js
+npm install echess.js
 
 # Yarn
-yarn add chess.js
+yarn add echess.js
 ```
 
 ## Example Code
@@ -25,7 +26,7 @@ yarn add chess.js
 The code below plays a random game of chess:
 
 ```js
-const { Chess } = require('./chess.js')
+const { Chess } = require('./echess.js')
 const chess = new Chess()
 
 while (!chess.game_over()) {
