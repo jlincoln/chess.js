@@ -1,5 +1,5 @@
 {
-  "name": "echess.js",
+  "name": "@jlincoln/echess.js",
   "version": "0.0.1",
   "license": "BSD-2-Clause",
   "main": "echess.js",

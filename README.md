@@ -15,10 +15,10 @@ To install the stable version:
 
 ```
 # NPM
-npm install echess.js
+npm install @jlincoln/echess.js
 
 # Yarn
-yarn add echess.js
+yarn add @jlincoln/echess.js
 ```
 
 ## Example Code
