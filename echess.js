@@ -532,7 +532,7 @@ var Echess = function(fen) {
           moves.push(build_move(board, from, to, flags, pieces[i]))
         }
       } else if (board[from].type === ELEPHANT) {
-        console.log(`add_move {from: ${from}, to: ${to}}`);
+        // console.log(`add_move {from: ${from}, to: ${to}}`);
         moves.push(build_move(board, from, to, flags))
       } else {
         if (board !== undefined && board[from] !== undefined && board[from].type !== undefined) {
@@ -541,6 +541,7 @@ var Echess = function(fen) {
       }
     }
 
+    console.log('generate_moves with options: ' + JSON.stringify(options));
     var moves = []
     var us = turn
     var them = swap_color(us)
@@ -605,17 +606,20 @@ var Echess = function(fen) {
         }
       } else if (piece.type === ELEPHANT) {
         // move to any none occupied square
-        console.log('finding moves for elephant at '+ i);
+        // console.log('finding moves for elephant at '+ i);
         for (let j = first_sq; j <= last_sq; j++) {
-          console.log('j is ' + j);
-          console.log('board[j] is ' + JSON.stringify(board[j]));
+          if (j & 0x88) {
+            j += 7
+            continue
+          }
+          // console.log('j is ' + j);
+          // console.log('board[j] is ' + JSON.stringify(board[j]));
           if (board[j] === undefined || board[j] == null) {
             square = j; // TODO: calculate offsets for piece & use to calc square
-            console.log(`adding move {from: ${i}, to: ${square}}`);
+            // console.log(`adding move {from: ${i}, to: ${square}}`);
             add_move(board, moves, i, square, BITS.NORMAL)
           }
         }
-        console.log(`moves are ${JSON.stringify(moves)}`);
       } else {
         for (var j = 0, len = PIECE_OFFSETS[piece.type].length; j < len; j++) {
           var offset = PIECE_OFFSETS[piece.type][j]
@@ -694,6 +698,7 @@ var Echess = function(fen) {
       }
       undo_move()
     }
+    // console.log(`legal_moves are ${JSON.stringify(legal_moves)}`);
     return legal_moves
   }
 
@@ -715,8 +720,14 @@ var Echess = function(fen) {
     } else if (move.flags & BITS.QSIDE_CASTLE) {
       output = 'O-O-O'
     } else {
-      var disambiguator = get_disambiguator(move, sloppy)
+      var disambiguator;
 
+      // if (move.piece === ELEPHANT) {
+        // output += move.piece.toUpperCase();
+      // } else {
+        disambiguator = get_disambiguator(move, sloppy)
+      // }
+      
       if (move.piece !== PAWN) {
         output += move.piece.toUpperCase() + disambiguator
       }
@@ -744,7 +755,7 @@ var Echess = function(fen) {
       }
     }
     undo_move()
-
+    console.log('move_to_san output is ' + output); 
     return output
   }
 
@@ -1061,6 +1072,7 @@ var Echess = function(fen) {
 
   /* this function is used to uniquely identify ambiguous moves */
   function get_disambiguator(move, sloppy) {
+    console.log('get_disambiguator move: ' + JSON.stringify(move));
     var moves = generate_moves({ legal: !sloppy })
 
     var from = move.from
@@ -1324,6 +1336,7 @@ var Echess = function(fen) {
       var ugly_moves = generate_moves(options)
       var moves = []
 
+      console.log('moves function ugly_moves.length is '+ ugly_moves.length)
       for (var i = 0, len = ugly_moves.length; i < len; i++) {
         /* does the user want a full move object (most likely not), or just
          * SAN
