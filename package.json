@@ -1,6 +1,6 @@
 {
   "name": "@jlincoln/echess.js",
-  "version": "0.0.1.a",
+  "version": "0.0.1.1",
   "license": "BSD-2-Clause",
   "main": "echess.js",
   "homepage": "https://github.com/jlincoln/echess.js",
