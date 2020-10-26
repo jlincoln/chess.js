@@ -604,7 +604,7 @@ var Echess = function(fen) {
         }
       } else if (piece.type === ELEPHANT) {
         // move to any none occupied square
-        for (let j = first_sq; j <= last_sq; j++) {
+        for (let j = SQUARES.a8; j <= SQUARES.h1; j++) {
           if (j & 0x88) {
             j += 7
             continue
