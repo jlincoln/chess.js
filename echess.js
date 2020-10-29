@@ -113,8 +113,7 @@ var Echess = function(fen) {
     EP_CAPTURE: 'e',
     PROMOTION: 'p',
     KSIDE_CASTLE: 'k',
-    QSIDE_CASTLE: 'q',
-    ELEPHANT_DOMINATE_COLOR: ''
+    QSIDE_CASTLE: 'q'
   }
 
   var BITS = {
@@ -162,6 +161,7 @@ var Echess = function(fen) {
   var board = new Array(128)
   var kings = { w: EMPTY, b: EMPTY }
   var turn = WHITE
+  var elephant_owner = '';
   var castling = { w: 0, b: 0 }
   var ep_square = EMPTY
   var half_moves = 0
@@ -498,6 +498,32 @@ var Echess = function(fen) {
     return piece
   }
 
+  function find_elephant() {
+    let i, found = false;
+
+    for (i = 0; i < board.length; i++) {
+      if (board[i] && board[i].type == ELEPHANT) {
+        found = true;
+        break;
+      }
+    }
+
+    if (found) {
+      return(i);
+    } else {
+      return(null);
+    }
+
+  }
+
+  function switch_elephant() {
+    elephant_owner = turn;
+    epos = find_elephant();
+    if (epos) {
+      board[epos].color = elephant_owner;
+    }
+  }
+
   function build_move(board, from, to, flags, promotion) {
     var move = {
       color: turn,
@@ -517,6 +543,9 @@ var Echess = function(fen) {
     } else if (flags & BITS.EP_CAPTURE) {
       move.captured = PAWN
     }
+
+    if (move.captured && turn !== elephant_owner) switch_elephant();
+
     return move
   }
 
@@ -595,6 +624,7 @@ var Echess = function(fen) {
         for (j = 2; j < 4; j++) {
           var square = i + PAWN_OFFSETS[us][j]
           if (square & 0x88) continue
+          if (board[square] && board[square].type === ELEPHANT) continue
 
           if (board[square] != null && board[square].color === them) {
             add_move(board, moves, i, square, BITS.CAPTURE)
