@@ -515,8 +515,8 @@ var Echess = function(fen) {
     }
   }
 
-  function switch_elephant() {
-    elephant_owner = turn;
+  function switch_elephant(color) {
+    elephant_owner = color;
     epos = find_elephant();
     if (epos) {
       board[epos].color = elephant_owner;
@@ -539,12 +539,9 @@ var Echess = function(fen) {
 
     if (board[to]) {
       move.captured = board[to].type
-      if (turn !== elephant_owner) switch_elephant();
     } else if (flags & BITS.EP_CAPTURE) {
       move.captured = PAWN
-      if (turn !== elephant_owner) switch_elephant();
     }
-
 
     return move
   }
@@ -1855,6 +1852,7 @@ var Echess = function(fen) {
       var pretty_move = make_pretty(move_obj)
 
       make_move(move_obj)
+      if (move_obj.captured && move_obj.color !== elephant_owner) switch_elephant(move_obj.color);
 
       return pretty_move
     },
