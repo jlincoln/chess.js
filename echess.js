@@ -513,7 +513,6 @@ var Echess = function(fen) {
     } else {
       return(null);
     }
-
   }
 
   function switch_elephant() {
@@ -540,11 +539,12 @@ var Echess = function(fen) {
 
     if (board[to]) {
       move.captured = board[to].type
+      if (turn !== elephant_owner) switch_elephant();
     } else if (flags & BITS.EP_CAPTURE) {
       move.captured = PAWN
+      if (turn !== elephant_owner) switch_elephant();
     }
 
-    if (move.captured && turn !== elephant_owner) switch_elephant();
 
     return move
   }
@@ -552,6 +552,7 @@ var Echess = function(fen) {
   function generate_moves(options) {
     function add_move(board, moves, from, to, flags) {
       /* if pawn promotion */
+      if (board[to] && board[to].type === ELEPHANT) return;
       if (
         board[from].type === PAWN &&
         (rank(to) === RANK_8 || rank(to) === RANK_1)
