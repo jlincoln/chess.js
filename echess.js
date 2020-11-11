@@ -516,9 +516,9 @@ var Echess = function(fen) {
   }
 
   function switch_elephant(color) {
-    elephant_owner = color;
     epos = find_elephant();
     if (epos) {
+      elephant_owner = color;
       board[epos].color = elephant_owner;
     }
   }
@@ -796,6 +796,11 @@ var Echess = function(fen) {
       var piece = board[i]
       var difference = i - square
       var index = difference + 119
+
+      if (board[i].type === ELEPHANT) {
+        console.log('attached by Elephant');
+        continue;
+      }
 
       if (ATTACKS[index] & (1 << SHIFTS[piece.type])) {
         if (piece.type === PAWN) {
