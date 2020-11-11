@@ -798,7 +798,6 @@ var Echess = function(fen) {
       var index = difference + 119
 
       if (board[i].type === ELEPHANT) {
-        console.log('attached by Elephant');
         continue;
       }
 
