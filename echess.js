@@ -547,7 +547,9 @@ var Echess = function(fen) {
   }
 
   function generate_moves(options) {
+
     function add_move(board, moves, from, to, flags) {
+
       /* if pawn promotion */
       if (board[to] && board[to].type === ELEPHANT) return;
       if (
@@ -601,7 +603,7 @@ var Echess = function(fen) {
       }
 
       var piece = board[i]
-      if (piece == null || (piece.color !== us && piece.type !== 'e')) {
+      if (piece == null || piece.color !== us) {
         continue
       }
 
@@ -743,11 +745,7 @@ var Echess = function(fen) {
     } else {
       var disambiguator;
 
-      // if (move.piece === ELEPHANT) {
-        // output += move.piece.toUpperCase();
-      // } else {
-        disambiguator = get_disambiguator(move, sloppy)
-      // }
+      disambiguator = get_disambiguator(move, sloppy)
       
       if (move.piece !== PAWN) {
         output += move.piece.toUpperCase() + disambiguator
