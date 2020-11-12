@@ -162,6 +162,7 @@ var Echess = function(fen) {
   var kings = { w: EMPTY, b: EMPTY }
   var turn = WHITE
   var elephant_owner = '';
+  var elephant_mode = 'domination';
   var castling = { w: 0, b: 0 }
   var ep_square = EMPTY
   var half_moves = 0
@@ -455,7 +456,7 @@ var Echess = function(fen) {
     if (!('type' in piece && 'color' in piece)) {
       return false
     }
-
+  
     /* check for piece */
     if (SYMBOLS.indexOf(piece.type.toLowerCase()) === -1) {
       return false
@@ -633,6 +634,7 @@ var Echess = function(fen) {
           }
         }
       } else if (piece.type === ELEPHANT) {
+        if (elephant_mode !== 'domination') continue;
         // move to any none occupied square
         for (let j = SQUARES.a8; j <= SQUARES.h1; j++) {
           if (j & 0x88) {
@@ -1924,6 +1926,14 @@ var Echess = function(fen) {
 
     set_comment: function(comment) {
       comments[generate_fen()] = comment.replace('{', '[').replace('}', ']');
+    },
+
+    get_elephant_mode: function() {
+      return elephant_mode;
+    },
+
+    set_elephant_mode: function(mode) {
+      elephant_mode = mode;
     },
 
     delete_comment: function() {
