@@ -1854,7 +1854,7 @@ var Echess = function(fen) {
       var pretty_move = make_pretty(move_obj)
 
       make_move(move_obj)
-      if (move_obj.captured && move_obj.color !== elephant_owner) switch_elephant(move_obj.color);
+      if (move_obj.captured) switch_elephant(move_obj.color);
 
       return pretty_move
     },
