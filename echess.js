@@ -502,7 +502,11 @@ var Echess = function(fen) {
   function find_elephant() {
     let i, found = false;
 
-    for (i = 0; i < board.length; i++) {
+    for (i = SQUARES.a8; i <= SQUARES.h1; i++) {
+      if (i & 0x88) {
+        i += 7
+        continue
+      }
       if (board[i] && board[i].type == ELEPHANT) {
         found = true;
         break;
@@ -514,6 +518,7 @@ var Echess = function(fen) {
     } else {
       return(null);
     }
+
   }
 
   function switch_elephant(color) {
@@ -1926,6 +1931,14 @@ var Echess = function(fen) {
 
     set_comment: function(comment) {
       comments[generate_fen()] = comment.replace('{', '[').replace('}', ']');
+    },
+
+    find_elephant_square: function() {
+      return algebraic(find_elephant());
+    },
+
+    find_elephant: function() {
+      return find_elephant();
     },
 
     get_elephant_mode: function() {
