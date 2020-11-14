@@ -452,6 +452,20 @@ var Echess = function(fen) {
   }
 
   function put(piece, square) {
+    var sq;
+
+    if (piece === null) {
+      // clear the valid square
+      if (!(square in SQUARES)) {
+        return false;
+      }
+      // clear the square
+      sq = SQUARES[square];
+      board[sq] = null;
+      update_setup(generate_fen());
+      return true;
+    }
+
     /* check for valid piece object */
     if (!('type' in piece && 'color' in piece)) {
       return false
@@ -467,7 +481,7 @@ var Echess = function(fen) {
       return false
     }
 
-    var sq = SQUARES[square]
+    sq = SQUARES[square]
 
     /* don't let the user place more than one king */
     if (
@@ -1237,6 +1251,9 @@ var Echess = function(fen) {
   }
 
   function algebraic(i) {
+
+    if (i === null) { return; }
+
     var f = file(i), r = rank(i)
 
     return 'abcdefgh'.substring(f, f + 1) + '87654321'.substring(r, r + 1)
